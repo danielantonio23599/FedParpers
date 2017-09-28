@@ -2,6 +2,24 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/modelo/ContatoBEAN.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMCriarDocumento.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMDocumento.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/controle/LoginControl.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/modelo/UsuarioDAO.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMPrincipalAdministrador.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMArea.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMCargo.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMPerfil.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMUsuario.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMLogin.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/controle/GeraRelatorio.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMContato.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/controle/Relatorio.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMSetor.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/visao/FRMPrincipalUsuario.java</file>
+            <file>file:/C:/Users/Daniel/Desktop/IFMG/FedParpes/FedPapers/src/modelo/ConnectionFactory.java</file>
+        </group>
     </open-files>
 </project-private>

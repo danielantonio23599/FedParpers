@@ -8,6 +8,7 @@ package controle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import modelo.CargoBEAN;
+import modelo.ContatoBEAN;
 import modelo.UsuarioBEAN;
 import modelo.UsuarioDAO;
 
@@ -78,10 +79,22 @@ public class UsuarioControl {
         }
     }
 
-    
-
     public void atualizarFoto(UsuarioBEAN u) {
         ud.atualizarFoto(u);
+    }
+
+    public UsuarioBEAN verificaUser(String e) {
+        UsuarioBEAN a = ud.verificaUser(e);
+        if (a != null) {
+            return a;
+        } else {
+            return null;
+        }
+    }
+
+    public UsuarioBEAN verificaUpdate(ArrayList<ContatoBEAN> aux) {
+        UsuarioBEAN a = ud.verificaUpdate(aux);
+        return a;
     }
 
 }

@@ -10,7 +10,7 @@ package modelo;
  * @author Daniel
  */
 public class SetorBEAN {
-    
+
     private int cod;
     private String nome;
     private String descricao;

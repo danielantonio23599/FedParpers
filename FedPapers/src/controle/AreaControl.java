@@ -10,21 +10,22 @@ import java.util.ArrayList;
 import modelo.AreaBEAN;
 import modelo.AreaDAO;
 
-
 /**
  *
  * @author Daniel
  */
 public class AreaControl {
-private AreaDAO a = new AreaDAO();
+
+    private AreaDAO a = new AreaDAO();
+
     public ArrayList<AreaBEAN> pegaArea() {
-       ArrayList<AreaBEAN> area = a.pegaArea();
-       return area;
+        ArrayList<AreaBEAN> area = a.pegaArea();
+        return area;
     }
 
     public AreaBEAN pegaCodigo(String area) {
         AreaBEAN are = a.pegaCodigo(area);
         return are;
     }
-    
+
 }

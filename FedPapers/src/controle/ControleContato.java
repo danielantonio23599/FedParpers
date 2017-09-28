@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import modelo.CargoBEAN;
 import modelo.ContatoBEAN;
 import modelo.ContatoDAO;
+import modelo.UsuarioBEAN;
 
 /**
  *
@@ -18,18 +19,19 @@ public class ControleContato {
 
     private ContatoDAO cd = new ContatoDAO();
 
-    public boolean adicionar(ContatoBEAN aux2) {
-        boolean aux = this.verificaIgual(aux2);
-        if (aux == false) {
-            cd.cadastrarContato(aux2);
-            return true;
+    public UsuarioBEAN adicionar(ContatoBEAN aux2) {
+
+        UsuarioBEAN u = this.verificaUser(aux2);
+        if (u != null) {
+
+            return u;
         } else {
-            return false;
+            return null;
         }
     }
 
-    private boolean verificaIgual(ContatoBEAN aux2) {
-        boolean aux = cd.verifica(aux2);
+    public boolean verificaIgual(ContatoBEAN aux2, int i) {
+        boolean aux = cd.verifica(aux2, i);
         if (aux == false) {
             return false;
         } else {
@@ -38,12 +40,18 @@ public class ControleContato {
     }
 
     public ArrayList<ContatoBEAN> contatoAll(int cod) {
-        ArrayList<ContatoBEAN> aux = cd.verTodosContatos( cod);
+        ArrayList<ContatoBEAN> aux = cd.verTodosContatos(cod);
+
         return aux;
     }
 
-    public ArrayList<ContatoBEAN> localizar(int parseInt) {
-        ArrayList<ContatoBEAN> aux = cd.localizarContato(parseInt);
+    public ArrayList<UsuarioBEAN> localizarFoto(int i, int j) {
+        ArrayList<UsuarioBEAN> u = cd.localizarFoto(i, j);
+        return u;
+    }
+
+    public ArrayList<ContatoBEAN> localizar(int i, int j) {
+        ArrayList<ContatoBEAN> aux = cd.localizarContato(i, j);
         return aux;
     }
 
@@ -54,4 +62,29 @@ public class ControleContato {
     public void remover(int aux2) {
         cd.removerContato(aux2);
     }
+
+    public UsuarioBEAN verificaUser(ContatoBEAN aux2) {
+        UsuarioControl c = new UsuarioControl();
+        UsuarioBEAN u = c.verificaUser(aux2.getEndEletronico());
+        if (u != null) {
+            return u;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean adicionar2(ContatoBEAN aux2, int i) {
+        boolean aux = this.verificaIgual(aux2, i);
+        if (aux == false) {
+            cd.cadastrarContato2(aux2);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void adicionar(ContatoBEAN aux2, UsuarioBEAN ad) {
+        cd.cadastrarContato(aux2, ad);
+    }
+
 }

@@ -10,6 +10,7 @@ package modelo;
  * @author Daniel
  */
 public class TipoUsuarioBEAN {
+
     private int cod;
     private String nome;
 
@@ -28,5 +29,5 @@ public class TipoUsuarioBEAN {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
 }

@@ -14,27 +14,29 @@ import modelo.CargoDAO;
  * @author Daniel
  */
 public class CargoControl {
-    private  static CargoDAO ca = new CargoDAO();
+
+    private static CargoDAO ca = new CargoDAO();
 
     public boolean adicionar(CargoBEAN ca) {
-       boolean aux1 = this.verificaNome(ca);
-       if(aux1 == false){
-       boolean aux = this.ca.adicionar(ca);
-       if(aux == true){
-       return true;
-       }else{
-       return false;
-       }
-       }else{       
-       return false;
-       }
+        boolean aux1 = this.verificaNome(ca);
+        if (aux1 == false) {
+            boolean aux = this.ca.adicionar(ca);
+            if (aux == true) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     public ArrayList<CargoBEAN> listarALL() {
         ArrayList<CargoBEAN> dados = ca.listarALl();
-    return dados;}
+        return dados;
+    }
 
-    public void editar(CargoBEAN c) {    
+    public void editar(CargoBEAN c) {
         this.ca.editar(c);
     }
 
@@ -44,24 +46,25 @@ public class CargoControl {
     }
 
     public boolean excluir(int cod) {
-          boolean aux = this.veinculadoUsuario(cod);
-          if(aux == true){
-        ca.excluir(cod);
-        return true;
-          }else{
-          return false;
-          }
+        boolean aux = this.veinculadoUsuario(cod);
+        if (aux == true) {
+            ca.excluir(cod);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean verificaNome(CargoBEAN c) {
-       ArrayList<CargoBEAN> k = ca.listarALl();
+        ArrayList<CargoBEAN> k = ca.listarALl();
         for (CargoBEAN cg : k) {
-            if(cg.getNome().equals(c.getNome())){
-            return true;
+            if (cg.getNome().equals(c.getNome())) {
+                return true;
             }
         }
         return false;
     }
+
     public CargoBEAN pegaCodigo(String cargo) {
         CargoBEAN car = ca.pegaCodigo(cargo);
         return car;
@@ -69,11 +72,10 @@ public class CargoControl {
 
     private boolean veinculadoUsuario(int c) {
         boolean v = ca.veinculadoUsuario(c);
-        if(v==true){
-        return true;
-        }else{
-        return false;
+        if (v == true) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
-

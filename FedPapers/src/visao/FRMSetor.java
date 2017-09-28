@@ -33,7 +33,7 @@ public class FRMSetor extends javax.swing.JFrame {
     private DefaultTableModel dTable;
     private ArrayList<SetorBEAN> arrayDadosTabelaSetores;
 
-    public void setDadosUsuer(int cod, String s,String se) {
+    public void setDadosUsuer(int cod, String s, String se) {
         this.cod = cod;
         ArrayList<UsuarioBEAN> dados = new ArrayList<UsuarioBEAN>();
         UsuarioControl uc = new UsuarioControl();
@@ -50,8 +50,8 @@ public class FRMSetor extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         arrayDadosTabelaSetores = controleSetor.verTodosSetores();
         this.preencherTabelaSetores(arrayDadosTabelaSetores);
- this.HORAS();
-       Timer time = new Timer(1000, ativar);
+        this.HORAS();
+        Timer time = new Timer(1000, ativar);
         time.start();
     }
 
@@ -77,7 +77,6 @@ public class FRMSetor extends javax.swing.JFrame {
     int hh, mm, ss, dd; //*
     Calendar hora; //*Hora
     DecimalFormat formato;
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -799,7 +798,7 @@ public class FRMSetor extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem22ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-        FRMPerfil p = new FRMPerfil();        
+        FRMPerfil p = new FRMPerfil();
         p.setDadosUsuer(cod, tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
@@ -808,7 +807,7 @@ public class FRMSetor extends javax.swing.JFrame {
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
         FRMPrincipalUsuario p = new FRMPrincipalUsuario();
         p.setVisible(true);
-        p.setDadosUsuer(cod+"", tipoUser, senha);
+        p.setDadosUsuer(cod + "", tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
@@ -827,7 +826,7 @@ public class FRMSetor extends javax.swing.JFrame {
 
     private void jMenuItem30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem30ActionPerformed
         FRMPrincipalAdministrador p = new FRMPrincipalAdministrador();
-        p.setDadosUsuer(cod+"", tipoUser, senha);
+        p.setDadosUsuer(cod + "", tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem30ActionPerformed

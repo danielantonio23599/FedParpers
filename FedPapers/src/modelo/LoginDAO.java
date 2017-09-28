@@ -145,20 +145,20 @@ public class LoginDAO {
         }
     }
 
-   public void editar(UsuarioBEAN u) {
-        String sql = "update login  set logSenha = md5('"+u.getLogin().getSenha() +
-                 "')where logCodigo = "+u.getLogin().getCod()+";";
-        
-       System.out.println(u.getLogin().getCod());
+    public void editar(UsuarioBEAN u) {
+        String sql = "update login  set logSenha = md5('" + u.getLogin().getSenha()
+                + "')where logCodigo = " + u.getLogin().getCod() + ";";
+
+        System.out.println(u.getLogin().getCod());
         try {
             stmt = connection.prepareStatement(sql);
-           // stmt.setString(1, u.getLogin().getSenha());
+            // stmt.setString(1, u.getLogin().getSenha());
             //stmt.setInt(2, u.getLogin().getCod());
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
+
     }
 }

@@ -1,13 +1,22 @@
 package visao;
 
 import controle.ControleContato;
+import controle.GeraRelatorio;
 import controle.ManipularImagem;
 import controle.UsuarioControl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -78,9 +87,10 @@ public class FRMContato extends javax.swing.JFrame {
         UsuarioControl uc = new UsuarioControl();
         dad = uc.localizar(cod);
         lbUser.setText(dad.get(0).getNome());
+        dados = control.contatoAll(cod);
         ManipularImagem m = new ManipularImagem();
         m.exibiImagemLabel(dad.get(0).getFoto(), lbFotoUser);
-        dados = control.contatoAll(cod);
+        System.out.println(dad.get(0).getFoto());
         this.preencheTabela(dados);
     }
 
@@ -153,6 +163,12 @@ public class FRMContato extends javax.swing.JFrame {
         jMenuItem48 = new javax.swing.JMenuItem();
         jMenuItem49 = new javax.swing.JMenuItem();
         jMenu14 = new javax.swing.JMenu();
+        jDialog1 = new javax.swing.JDialog();
+        popupMenu1 = new java.awt.PopupMenu();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -170,14 +186,21 @@ public class FRMContato extends javax.swing.JFrame {
         comboTipo = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         lbCodigo = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        tfEmail = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        tfCelular = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableContato = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        lbFoto = new javax.swing.JLabel();
         btnAdicionarContato = new javax.swing.JButton();
         btnEditarContato = new javax.swing.JButton();
         btnExcluirContato = new javax.swing.JButton();
         btnLocalizar = new javax.swing.JButton();
         btnVerTodos = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jMenuBar5 = new javax.swing.JMenuBar();
         jMenu15 = new javax.swing.JMenu();
         jMenuItem50 = new javax.swing.JMenuItem();
@@ -198,6 +221,10 @@ public class FRMContato extends javax.swing.JFrame {
         jMenuItem66 = new javax.swing.JMenuItem();
         jMenuItem67 = new javax.swing.JMenuItem();
         jMenuItem68 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu19 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem54 = new javax.swing.JMenuItem();
         jMenu18 = new javax.swing.JMenu();
 
         jMenu6.setText("Arquivo");
@@ -452,6 +479,25 @@ public class FRMContato extends javax.swing.JFrame {
         jMenu14.setText("Ajuda");
         jMenuBar4.add(jMenu14);
 
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        popupMenu1.setLabel("popupMenu1");
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu5.setText("Edit");
+        jMenuBar1.add(jMenu5);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("FedPapers 1.0");
 
@@ -475,13 +521,35 @@ public class FRMContato extends javax.swing.JFrame {
         jLabel81.setText("Nome :");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel1.setText("Endereço Eletronico :");
+        jLabel1.setText("Celular:");
 
         jLabel2.setText("Tipo Usuario:");
 
         comboTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione o tipo de usuario....", "Usuário Interno", "Usuário Externo" }));
 
         jLabel3.setText("Codigo :");
+
+        jLabel4.setText("Email:");
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel6.setText("Endereço Eletronico :");
+
+        try{
+            javax.swing.text.MaskFormatter data= new javax.swing.text.MaskFormatter("(##)#####-####");
+            tfCelular = new javax.swing.JFormattedTextField(data);
+        }
+        catch (Exception e){
+        }
+        tfCelular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfCelularActionPerformed(evt);
+            }
+        });
+        tfCelular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfCelularKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -490,20 +558,29 @@ public class FRMContato extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addComponent(jLabel81)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tfCelular, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                            .addComponent(tfNome)
+                            .addComponent(tfEnderecoEletronico))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
-                        .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tfEnderecoEletronico, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(comboTipo, 0, 230, Short.MAX_VALUE)
+                            .addComponent(tfEmail))
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(lbCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(52, 486, Short.MAX_VALUE))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -512,34 +589,42 @@ public class FRMContato extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
                     .addComponent(lbCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel81)
+                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(comboTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(15, 15, 15)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfEnderecoEletronico, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfCelular, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfEnderecoEletronico, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista de contatos"));
 
         tableContato.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "codigo", "Nome", "Endereco Eletronico", "Tipo Usuario"
+                "codigo", "Nome", "Endereco Eletronico", "Tipo Usuario", "Foto", "Celular", "Email"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Byte.class, java.lang.String.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -560,13 +645,33 @@ public class FRMContato extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 977, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 23, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(59, 59, 59)
+                .addComponent(lbFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(75, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(lbFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -575,16 +680,22 @@ public class FRMContato extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -633,6 +744,14 @@ public class FRMContato extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton1.setText("Gerar Relatório");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -643,18 +762,19 @@ public class FRMContato extends javax.swing.JFrame {
                     .addComponent(btnExcluirContato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLocalizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEditarContato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnVerTodos, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                    .addComponent(btnVerTodos, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
                     .addComponent(btnAdicionarContato, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(77, 77, 77)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbFotoUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbHoras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbFotoUser)
+                            .addComponent(lbUser, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbHoras, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -675,14 +795,16 @@ public class FRMContato extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnVerTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addComponent(lbFotoUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbUser, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbHoras)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -849,7 +971,35 @@ public class FRMContato extends javax.swing.JFrame {
         });
         jMenu17.add(jMenuItem68);
 
+        jMenuItem2.setText("Gerar Relatório");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu17.add(jMenuItem2);
+
         jMenuBar5.add(jMenu17);
+
+        jMenu19.setText("Relatórios");
+
+        jMenuItem3.setText("Gerar Relatório Contatos");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem3);
+
+        jMenuItem54.setText("Gerar Relatório Memorandos");
+        jMenuItem54.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem54ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem54);
+
+        jMenuBar5.add(jMenu19);
 
         jMenu18.setText("Ajuda");
         jMenuBar5.add(jMenu18);
@@ -907,7 +1057,7 @@ public class FRMContato extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem41ActionPerformed
 
     private void jMenuItem53ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem53ActionPerformed
-        FRMDocumento d = new FRMDocumento();
+        FRMCriarDocumento d = new FRMCriarDocumento();
         d.setVisible(true);
         d.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
@@ -916,14 +1066,14 @@ public class FRMContato extends javax.swing.JFrame {
     private void jMenuItem61ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem61ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 1);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem61ActionPerformed
 
     private void jMenuItem62ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem62ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem62ActionPerformed
 
@@ -957,28 +1107,28 @@ public class FRMContato extends javax.swing.JFrame {
     private void jMenuItem60ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem60ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 0);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem60ActionPerformed
 
     private void jMenuItem63ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem63ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem63ActionPerformed
 
     private void jMenuItem64ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem64ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem64ActionPerformed
 
     private void jMenuItem69ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem69ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha, 2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem69ActionPerformed
 
@@ -986,16 +1136,16 @@ public class FRMContato extends javax.swing.JFrame {
         boolean aux = this.verificaCampos();
         if (aux == true) {
             ContatoBEAN aux2 = this.pegaCampos();
-            boolean ad = control.adicionar(aux2);
+            UsuarioBEAN ad = control.adicionar(aux2);
             dados = control.contatoAll(cod);
             this.preencheTabela(dados);
-            if (ad == true) {
+            /* if (ad == true) {
                 JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
             } else {
                 JOptionPane.showMessageDialog(null, "Esse contato ja existe!");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Preencha todos os Campos");
+            JOptionPane.showMessageDialog(null, "Preencha todos os Campos");*/
         }
         this.limparCampos();
     }//GEN-LAST:event_jMenuItem10ActionPerformed
@@ -1048,9 +1198,9 @@ public class FRMContato extends javax.swing.JFrame {
         if (i.equals("")) {
             JOptionPane.showMessageDialog(null, "Campo vasio");
         } else {
-            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(i));
+            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(i), cod);
             if (aux.size() > 0) {
-                this.preencherCampos(aux);
+                this.preencherCampos(aux, Integer.parseInt(i));
                 this.preencheTabela(aux);
             } else {
                 JOptionPane.showMessageDialog(null, "Nao encontrado ocontato!");
@@ -1075,9 +1225,9 @@ public class FRMContato extends javax.swing.JFrame {
         if (i.equals("")) {
             JOptionPane.showMessageDialog(null, "Campo vasio");
         } else {
-            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(i));
+            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(i), cod);
             if (aux.size() > 0) {
-                this.preencherCampos(aux);
+                this.preencherCampos(aux, Integer.parseInt(i));
                 this.preencheTabela(aux);
             } else {
                 JOptionPane.showMessageDialog(null, "Nao encontrado ocontato!");
@@ -1132,23 +1282,44 @@ public class FRMContato extends javax.swing.JFrame {
         boolean aux = this.verificaCampos();
         if (aux == true) {
             ContatoBEAN aux2 = this.pegaCampos();
-            boolean ad = control.adicionar(aux2);
-            dados = control.contatoAll(cod);
-            this.preencheTabela(dados);
-            if (ad == true) {
-                JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
+            if (aux2.getTipoUser().equals("Usuário Interno")) {
+                boolean aux3 = control.verificaIgual(aux2, cod);
+                if (aux3 == false) {
+                    UsuarioBEAN ad = control.verificaUser(aux2);
+                    if (ad == null) {
+                        JOptionPane.showMessageDialog(null, "Contato interno não existe!\nTente cadastrar como Usuario esterno");
+                    } else {
+                        control.adicionar(aux2, ad);
+                        dados = control.contatoAll(cod);
+                        this.preencheTabela(dados);
+                        JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
+                        this.limparCampos();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Esse contato ja existe!");
+                }
+
             } else {
-                JOptionPane.showMessageDialog(null, "Esse contato ja existe!");
+                boolean ad = control.adicionar2(aux2, cod);
+
+                if (ad == true) {
+                    dados = control.contatoAll(cod);
+                    this.preencheTabela(dados);
+                    JOptionPane.showMessageDialog(null, "Cadastro feito com sucesso!");
+                    this.limparCampos();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Esse contato ja existe!");
+                }
             }
         } else {
             JOptionPane.showMessageDialog(null, "Preencha todos os Campos");
         }
-        this.limparCampos();
+
     }//GEN-LAST:event_btnAdicionarContatoActionPerformed
 
     private void tableContatoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableContatoMouseClicked
         if (tableContato.getRowCount() == 1) {
-            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(tableContato.getValueAt(0, 0) + ""));
+            ArrayList<ContatoBEAN> aux = control.localizar(Integer.parseInt(tableContato.getValueAt(0, 0) + ""), cod);
             this.pegaSelecionado(aux);
         } else {
             ArrayList<ContatoBEAN> aux = control.contatoAll(cod);
@@ -1156,6 +1327,50 @@ public class FRMContato extends javax.swing.JFrame {
         }
         tfEnderecoEletronico.setEditable(false);
     }//GEN-LAST:event_tableContatoMouseClicked
+
+    private void tfCelularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCelularActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfCelularActionPerformed
+
+    private void tfCelularKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfCelularKeyTyped
+        String caracteres = "0987654321()-";
+        if (!caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_tfCelularKeyTyped
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+      try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem54ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem54ActionPerformed
+       try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Usuario");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem54ActionPerformed
     private DefaultTableModel criaTabela() {
         //sempre que usar JTable é necessário ter um DefaulttableModel
         DefaultTableModel dTable = new DefaultTableModel() {
@@ -1184,13 +1399,15 @@ public class FRMContato extends javax.swing.JFrame {
         //seta o nome das colunas da tabela
         dTable.addColumn("Código");
         dTable.addColumn("Nome");
+        dTable.addColumn("Email");
+        dTable.addColumn("Celular");
         dTable.addColumn("Endereço Eletronico");
         dTable.addColumn("Tipo Usuário");
         //pega os dados do ArrayList
 
         //cada célula do arrayList vira uma linha(row) na tabela
         for (ContatoBEAN dado : dados) {
-            dTable.addRow(new Object[]{dado.getCodigo(), dado.getNome(),
+            dTable.addRow(new Object[]{dado.getCodigo(), dado.getNome(), dado.getEmail(), dado.getCelular(),
                 dado.getEndEletronico(), dado.getTipoUser()});
         }
         //set o modelo da tabela
@@ -1263,11 +1480,16 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JButton btnLocalizar;
     private javax.swing.JButton btnVerTodos;
     private javax.swing.JComboBox<String> comboTipo;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel81;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;
@@ -1277,13 +1499,16 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu16;
     private javax.swing.JMenu jMenu17;
     private javax.swing.JMenu jMenu18;
+    private javax.swing.JMenu jMenu19;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenu jMenu8;
     private javax.swing.JMenu jMenu9;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JMenuBar jMenuBar4;
@@ -1299,6 +1524,7 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem19;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem22;
@@ -1309,6 +1535,7 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem27;
     private javax.swing.JMenuItem jMenuItem28;
     private javax.swing.JMenuItem jMenuItem29;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem30;
     private javax.swing.JMenuItem jMenuItem31;
     private javax.swing.JMenuItem jMenuItem32;
@@ -1335,6 +1562,7 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem51;
     private javax.swing.JMenuItem jMenuItem52;
     private javax.swing.JMenuItem jMenuItem53;
+    private javax.swing.JMenuItem jMenuItem54;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem60;
     private javax.swing.JMenuItem jMenuItem61;
@@ -1353,20 +1581,26 @@ public class FRMContato extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbCodigo;
+    private javax.swing.JLabel lbFoto;
     private javax.swing.JLabel lbFotoUser;
     private javax.swing.JLabel lbHoras;
     private javax.swing.JLabel lbUser;
+    private java.awt.PopupMenu popupMenu1;
     private javax.swing.JTable tableContato;
+    private javax.swing.JTextField tfCelular;
+    private javax.swing.JTextField tfEmail;
     private javax.swing.JTextField tfEnderecoEletronico;
     private javax.swing.JTextField tfNome;
     // End of variables declaration//GEN-END:variables
 
     private boolean verificaCampos() {
-        if ((!tfNome.getText().equals("")) && (comboTipo.getSelectedIndex() != 0 && !tfEnderecoEletronico.getText().equals(""))) {
+        if ((!tfNome.getText().equals("")) && (comboTipo.getSelectedIndex() != 0 && !tfEmail.getText().equals("") && !tfCelular.getText().equals(""))) {
             return true;
         } else {
             return false;
@@ -1376,8 +1610,11 @@ public class FRMContato extends javax.swing.JFrame {
     private ContatoBEAN pegaCampos() {
         ContatoBEAN c = new ContatoBEAN();
         c.setNome(tfNome.getText());
+        c.setCelular(tfCelular.getText());
+        c.setEmail(tfEmail.getText());
         String aux = this.pegaCombo();
         c.setTipoUser(aux);
+        System.out.println(aux);
         c.setEndEletronico(tfEnderecoEletronico.getText());
         c.setCodigo(cod);
         return c;
@@ -1396,26 +1633,49 @@ public class FRMContato extends javax.swing.JFrame {
     private void pegaSelecionado(ArrayList<ContatoBEAN> aux) {
         int linha = retornaLinha();
         tfNome.setText(aux.get(linha).getNome());
+        tfCelular.setText(aux.get(linha).getCelular());
+        tfEmail.setText(aux.get(linha).getEmail());
         tfEnderecoEletronico.setText(aux.get(linha).getEndEletronico());
         lbCodigo.setText(aux.get(linha).getCodigo() + "");
         comboTipo.setSelectedItem(aux.get(linha).getTipoUser());
+        ArrayList<UsuarioBEAN> u = control.localizarFoto(aux.get(linha).getCodigo(), cod);
+        ManipularImagem m = new ManipularImagem();
+
+        if (u.get(0).getFoto() != null) {
+            m.exibiImagemLabel(u.get(0).getFoto(), lbFoto);
+        } else {
+            lbFoto.setIcon(null);
+            System.out.println("toma no cu");
+        }
     }
 
     private void limparCampos() {
         tfEnderecoEletronico.setEditable(true);
         tfEnderecoEletronico.setText("");
+        tfEmail.setText("");
+        tfCelular.setText("");
+        lbFoto.setIcon(null);
         tfNome.setText("");
         lbCodigo.setText("");
         comboTipo.setSelectedIndex(0);
     }
 
-    private void preencherCampos(ArrayList<ContatoBEAN> aux) {
-
+    private void preencherCampos(ArrayList<ContatoBEAN> aux, int i) {
         tfEnderecoEletronico.setEditable(false);
         tfEnderecoEletronico.setText(aux.get(0).getEndEletronico());
+        tfCelular.setText(aux.get(0).getCelular());
+        tfEmail.setText(aux.get(0).getEmail());
         tfNome.setText(aux.get(0).getNome());
         comboTipo.setSelectedItem(aux.get(0).getTipoUser());
         lbCodigo.setText(aux.get(0).getCodigo() + "");
+        ArrayList<UsuarioBEAN> u = control.localizarFoto(i, cod);
+        ManipularImagem m = new ManipularImagem();
 
+        if (u.get(0).getCod() != 0) {
+            m.exibiImagemLabel(u.get(0).getFoto(), lbFoto);
+        } else {
+            lbFoto.setIcon(null);
+            System.out.println("toma no cu");
+        }
     }
 }

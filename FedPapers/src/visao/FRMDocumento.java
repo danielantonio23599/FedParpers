@@ -1,15 +1,27 @@
 package visao;
 
+import controle.ControleContato;
+import controle.ControleDocumento;
+import controle.GeraRelatorio;
 import controle.ManipularImagem;
+import controle.Relatorio;
 import controle.UsuarioControl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
+import modelo.ContatoBEAN;
+import modelo.DocumentoBEAN;
 import modelo.UsuarioBEAN;
 
 /*
@@ -17,7 +29,6 @@ import modelo.UsuarioBEAN;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Mateu
@@ -27,26 +38,46 @@ public class FRMDocumento extends javax.swing.JFrame {
     /**
      * Creates new form FRMPrincipal
      */
-  private int cod;
-private String tipoUser;
-private String senha;
-    
-public void setDadosUsuer(int cod, String s, String se) {
-       this.cod = cod;
-       ArrayList<UsuarioBEAN> dados = new ArrayList<UsuarioBEAN>();
-        UsuarioControl uc = new UsuarioControl();
+    private int cod;
+
+    private String tipoUser;
+    private String senha;
+    private ArrayList<DocumentoBEAN> doc;
+    private ArrayList<DocumentoBEAN> nlidos;
+    private DefaultTableModel dTable;
+    private DefaultTableModel dTable2;
+    private DefaultTableModel dTable3;
+    private DefaultTableModel dTable4;
+    private ControleDocumento c = new ControleDocumento();
+    private UsuarioControl uc = new UsuarioControl();
+
+    public void setDadosUsuer(int cod, String s, String se, int idx) {
+        this.cod = cod;
+        ArrayList<UsuarioBEAN> dados = new ArrayList<UsuarioBEAN>();
+
         dados = uc.localizar(cod);
+
         lbUser.setText(dados.get(0).getNome());
         ManipularImagem m = new ManipularImagem();
         m.exibiImagemLabel(dados.get(0).getFoto(), lbFotoUser);
         this.tipoUser = s;
         this.senha = se;
+        // 
+        this.setDataRecebida();
+        this.atualizaTabelaEnviados();
+        this.atualizaTabelaRecebidos();
+        this.atualizaTabelaNotLido();
+        this.atualizaTabelaTodos();
+        tpEnv.setSelectedIndex(idx);
+
     }
+
     public FRMDocumento() {
         initComponents();
+
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-     this.HORAS();
-       Timer time = new Timer(1000, ativar);
+        this.HORAS();
+        Timer time = new Timer(1000, ativar);
         time.start();
     }
 
@@ -73,7 +104,6 @@ public void setDadosUsuer(int cod, String s, String se) {
     Calendar hora; //*Hora
     DecimalFormat formato;
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -96,19 +126,19 @@ public void setDadosUsuer(int cod, String s, String se) {
         lbHoras = new javax.swing.JLabel();
         btnDocs = new javax.swing.JButton();
         btnArquivados = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tpEnv = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableEnviado = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTable6 = new javax.swing.JTable();
-        jPanel7 = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTable7 = new javax.swing.JTable();
+        tableRecebido = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTable8 = new javax.swing.JTable();
+        tableTodos = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableNovo = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -129,6 +159,9 @@ public void setDadosUsuer(int cod, String s, String se) {
         jMenuItem18 = new javax.swing.JMenuItem();
         jMenuItem21 = new javax.swing.JMenuItem();
         jMenuItem22 = new javax.swing.JMenuItem();
+        jMenu19 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem54 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -139,7 +172,7 @@ public void setDadosUsuer(int cod, String s, String se) {
 
         btnNovoDoc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnNovoDoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/add-new-document.png"))); // NOI18N
-        btnNovoDoc.setText("Novo Documento");
+        btnNovoDoc.setText("Novo Memorandos");
         btnNovoDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoDocActionPerformed(evt);
@@ -147,7 +180,7 @@ public void setDadosUsuer(int cod, String s, String se) {
         });
 
         btnDocEnv.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDocEnv.setText("Documentos Enviados");
+        btnDocEnv.setText("Memorandos Enviados");
         btnDocEnv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDocEnvActionPerformed(evt);
@@ -155,10 +188,20 @@ public void setDadosUsuer(int cod, String s, String se) {
         });
 
         btnDocRec.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDocRec.setText("Documentos Recebidos");
+        btnDocRec.setText("Memorandos Recebidos");
+        btnDocRec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDocRecActionPerformed(evt);
+            }
+        });
 
         btnRasc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnRasc.setText("Rascunhos");
+        btnRasc.setText("Novos Memorandos");
+        btnRasc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRascActionPerformed(evt);
+            }
+        });
 
         lbFotoUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/INTERFACE GRAFICA/user (2).png"))); // NOI18N
 
@@ -172,33 +215,45 @@ public void setDadosUsuer(int cod, String s, String se) {
         lbHoras.setText(".");
 
         btnDocs.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDocs.setText("Todos os Documentos");
+        btnDocs.setText("Todos os Memorandos");
+        btnDocs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDocsActionPerformed(evt);
+            }
+        });
 
         btnArquivados.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnArquivados.setText("Arquivados");
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        tpEnv.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        tpEnv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tpEnvMouseClicked(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableEnviado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Destinatario", "Assunto", "Data Enviado", "Hora Enviado", "Data Recebido", "Hora Recebido", "Status", "Observação"
+                "Destinatario", "Assunto", "Data/Hora Enviado", "Data/Hora Recebido", "Data/Hora Lido", "Status", "Codigo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        tableEnviado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableEnviadoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableEnviado);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -206,7 +261,7 @@ public void setDadosUsuer(int cod, String s, String se) {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -217,28 +272,37 @@ public void setDadosUsuer(int cod, String s, String se) {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Sent", jPanel4);
+        tpEnv.addTab("Enviados", jPanel4);
 
-        jTable6.setModel(new javax.swing.table.DefaultTableModel(
+        tableRecebido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Remetente", "Assunto", "Data Enviado", "Hora Enviado", "Data Recebido", "Hora Recebido", "Status", "Observação"
+                "Remetente", "Assunto", "Data/Hora Enviado", "Data/Hora Recebido", "Status", "Codigo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane6.setViewportView(jTable6);
+        tableRecebido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableRecebidoMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(tableRecebido);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -246,7 +310,7 @@ public void setDadosUsuer(int cod, String s, String se) {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -257,68 +321,37 @@ public void setDadosUsuer(int cod, String s, String se) {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Rec", jPanel5);
+        tpEnv.addTab("Recebidos", jPanel5);
 
-        jTable7.setModel(new javax.swing.table.DefaultTableModel(
+        tableTodos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Destinatario", "Assunto", "Data Enviado", "Hora Enviado", "Data Recebido", "Hora Recebido", "Status", "Observação"
+                "Assunto", "Remetente", "Destinatario", "Data/Hora Envio", "Data/Hora Recebido", "Data/Hora Lido", "Status", "Codigo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-        });
-        jScrollPane7.setViewportView(jTable7);
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Arch", jPanel7);
-
-        jTable8.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Destinatario", "Assunto", "Data Enviado", "Hora Enviado", "Data Recebido", "Hora Recebido", "Status", "Observação"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
-        jScrollPane8.setViewportView(jTable8);
+        tableTodos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableTodosMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(tableTodos);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -326,7 +359,7 @@ public void setDadosUsuer(int cod, String s, String se) {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -337,7 +370,44 @@ public void setDadosUsuer(int cod, String s, String se) {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("draft", jPanel8);
+        tpEnv.addTab("Todos", jPanel8);
+
+        tableNovo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableNovo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableNovoMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableNovo);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tpEnv.addTab("Novo", jPanel2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -363,11 +433,10 @@ public void setDadosUsuer(int cod, String s, String se) {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lbHoras, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lbFotoUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lbUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(lbFotoUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(97, 97, 97)))
-                .addComponent(jTabbedPane1))
+                .addComponent(tpEnv))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -399,7 +468,7 @@ public void setDadosUsuer(int cod, String s, String se) {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(tpEnv, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jMenu5.setText("Arquivo");
@@ -444,7 +513,7 @@ public void setDadosUsuer(int cod, String s, String se) {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu1.setText("Documentos");
+        jMenu1.setText("Memorandos");
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/add-new-document.png"))); // NOI18N
@@ -459,6 +528,11 @@ public void setDadosUsuer(int cod, String s, String se) {
         jMenuItem13.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/sent-mail.png"))); // NOI18N
         jMenuItem13.setText("Enviados");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem13);
 
         jMenuItem14.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.ALT_MASK));
@@ -480,7 +554,12 @@ public void setDadosUsuer(int cod, String s, String se) {
         jMenu1.add(jMenuItem23);
 
         jMenuItem24.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, java.awt.event.InputEvent.ALT_MASK));
-        jMenuItem24.setText("Rascunhos");
+        jMenuItem24.setText("Novos");
+        jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem24ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem24);
 
         jMenuItem25.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.ALT_MASK));
@@ -490,6 +569,11 @@ public void setDadosUsuer(int cod, String s, String se) {
         jMenuItem26.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/magnifier.png"))); // NOI18N
         jMenuItem26.setText("Localizar");
+        jMenuItem26.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem26ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem26);
 
         jMenuBar1.add(jMenu1);
@@ -547,6 +631,26 @@ public void setDadosUsuer(int cod, String s, String se) {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu19.setText("Relatórios");
+
+        jMenuItem5.setText("Gerar Relatório Contatos");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem5);
+
+        jMenuItem54.setText("Gerar Relatório Memorandos");
+        jMenuItem54.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem54ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem54);
+
+        jMenuBar1.add(jMenu19);
+
         jMenu4.setText("Ajuda");
         jMenuBar1.add(jMenu4);
 
@@ -567,11 +671,14 @@ public void setDadosUsuer(int cod, String s, String se) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDocEnvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocEnvActionPerformed
-        // TODO add your handling code here:
+        tpEnv.setSelectedIndex(0);
     }//GEN-LAST:event_btnDocEnvActionPerformed
 
     private void btnNovoDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoDocActionPerformed
-        // TODO add your handling code here:
+        FRMCriarDocumento c = new FRMCriarDocumento();
+        c.setVisible(true);
+        c.setDadosUsuer(cod, tipoUser, senha);
+        this.setVisible(false);
     }//GEN-LAST:event_btnNovoDocActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -579,17 +686,17 @@ public void setDadosUsuer(int cod, String s, String se) {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
-        // TODO add your handling code here:
+        tpEnv.setSelectedIndex(1);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
-        // TODO add your handling code here:
+        tpEnv.setSelectedIndex(2);
     }//GEN-LAST:event_jMenuItem23ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-      FRMPerfil p = new FRMPerfil();       
+        FRMPerfil p = new FRMPerfil();
         p.setDadosUsuer(cod, tipoUser, senha);
-         p.setVisible(true);
+        p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
@@ -608,13 +715,13 @@ public void setDadosUsuer(int cod, String s, String se) {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         FRMPrincipalUsuario p = new FRMPrincipalUsuario();
-        p.setDadosUsuer(cod+"", tipoUser, senha);
+        p.setDadosUsuer(cod + "", tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-       FRMContato c = new FRMContato();
+        FRMContato c = new FRMContato();
         c.setVisible(true);
         c.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
@@ -628,25 +735,351 @@ public void setDadosUsuer(int cod, String s, String se) {
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
-      FRMContato c = new FRMContato();
+        FRMContato c = new FRMContato();
         c.setVisible(true);
         c.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
     private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
-         FRMContato c = new FRMContato();
+        FRMContato c = new FRMContato();
         c.setVisible(true);
         c.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem21ActionPerformed
 
     private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
-       FRMContato c = new FRMContato();
+        FRMContato c = new FRMContato();
         c.setVisible(true);
         c.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem22ActionPerformed
+
+    private void tpEnvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tpEnvMouseClicked
+
+    }//GEN-LAST:event_tpEnvMouseClicked
+
+    private void tableTodosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTodosMouseClicked
+        ArrayList<UsuarioBEAN> d = uc.localizar(cod);
+        int linha = tableTodos.getSelectedRow();
+        String sql = "";
+        if (!d.get(0).getEnderecoEletronico().equals(tableTodos.getValueAt(linha, 1) + "")) {
+            sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario from documento  join destinatariointerno join usuario \n"
+                    + "where docCodigo = dei_docCodigo and dei_usuCodigo = usuCodigo  and usuCodigo =" + cod + " and docCodigo = " + Integer.parseInt((tableTodos.getValueAt(linha, 7) + "")) + ";";
+        } else {
+            sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto,Destinatario "
+                    + " from documento join destinatariointerno join ("
+                    + " 	select usuCodigo as desCodigo, usuEnderecoEletronico as Destinatario from usuario "
+                    + " ) as dest "
+                    + "  join usuario "
+                    + "  where doc_usuCodigo = usuCodigo  and desCodigo = dei_usuCodigo and "
+                    + "  dei_docCodigo = docCodigo and usuCodigo = " + cod + " and docCodigo =" + Integer.parseInt((tableTodos.getValueAt(linha, 7) + "")) + ";";
+        }
+        System.out.println(sql);
+        try {
+            Relatorio.geraRelatorioPedDetalhado(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(FRMDocumento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tableTodosMouseClicked
+
+    private void tableRecebidoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableRecebidoMouseClicked
+        String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario from documento  join destinatariointerno join usuario \n"
+                + "where docCodigo = dei_docCodigo and dei_usuCodigo = usuCodigo  and usuCodigo =" + cod + " and docCodigo = " + Integer.parseInt((tableRecebido.getValueAt(tableRecebido.getSelectedRow(), 5) + "")) + ";";
+        System.out.println(sql);
+        try {
+            Relatorio.geraRelatorioPedDetalhado(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(FRMDocumento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tableRecebidoMouseClicked
+
+    private void tableEnviadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEnviadoMouseClicked
+        String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto,Destinatario "
+                + " from documento join destinatariointerno join ("
+                + " 	select usuCodigo as desCodigo, usuEnderecoEletronico as Destinatario from usuario "
+                + " ) as dest "
+                + "  join usuario "
+                + "  where doc_usuCodigo = usuCodigo  and desCodigo = dei_usuCodigo and "
+                + "  dei_docCodigo = docCodigo and usuCodigo = " + cod + " and docCodigo =" + Integer.parseInt((tableEnviado.getValueAt(tableEnviado.getSelectedRow(), 6) + "")) + ";";
+        System.out.println(sql);
+        try {
+            Relatorio.geraRelatorioPedDetalhado(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(FRMDocumento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tableEnviadoMouseClicked
+
+    private void tableNovoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableNovoMouseClicked
+        int docCod = Integer.parseInt((tableNovo.getValueAt(tableNovo.getSelectedRow(), 5) + ""));
+        String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario from documento  join destinatariointerno join usuario \n"
+                + "where docCodigo = dei_docCodigo and dei_usuCodigo = usuCodigo  and usuCodigo =" + cod + " and docCodigo = " + docCod + ";";
+        try {
+            Relatorio.geraRelatorioPedDetalhado(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(FRMDocumento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(docCod);
+        this.setDataLido(docCod);
+        this.atualizaTablas();
+        c.mudaStatus(docCod);
+        this.atualizaTablas();
+    }//GEN-LAST:event_tableNovoMouseClicked
+
+    private void btnDocRecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocRecActionPerformed
+        tpEnv.setSelectedIndex(1);
+    }//GEN-LAST:event_btnDocRecActionPerformed
+
+    private void btnDocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocsActionPerformed
+        tpEnv.setSelectedIndex(2);
+    }//GEN-LAST:event_btnDocsActionPerformed
+
+    private void btnRascActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRascActionPerformed
+        tpEnv.setSelectedIndex(3);
+    }//GEN-LAST:event_btnRascActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        tpEnv.setSelectedIndex(0);
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem24ActionPerformed
+        tpEnv.setSelectedIndex(3);
+    }//GEN-LAST:event_jMenuItem24ActionPerformed
+
+    private void jMenuItem26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem26ActionPerformed
+        tpEnv.setSelectedIndex(2);
+    }//GEN-LAST:event_jMenuItem26ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem54ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem54ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Usuario");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem54ActionPerformed
+    private void atualizaTablas() {
+        this.atualizaTabelaRecebidos();
+        this.atualizaTabelaEnviados();
+        this.atualizaTabelaNotLido();
+        this.atualizaTabelaTodos();
+    }
+
+    private int retornaLinha() {
+        int linha = tableNovo.getSelectedRowCount();
+        System.out.println(linha);
+        return linha;
+    }
+
+    private int pegaCodigoDocumento() {
+        int linha = this.retornaLinha();
+        doc = c.docNotLidos(cod);
+        return doc.get(linha).getCodigo();
+    }
+
+    /* this.setDataLido();
+        System.out.println(Integer.parseInt("codigo ---"+(tableNLidos.getValueAt(tableNLidos.getSelectedRow(), 5) + "")));
+        c.mudaStatus(Integer.parseInt((tableNLidos.getValueAt(tableNLidos.getSelectedRow(), 5) + "")));
+        this.atualizaTablas();
+        String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario from documento  join destinatariointerno join usuario \n"
+        + "where docCodigo = dei_docCodigo and dei_usuCodigo = usuCodigo  and usuCodigo =" + cod + " and docCodigo = " + Integer.parseInt((tableNLidos.getValueAt(tableNLidos.getSelectedRow(), 5) + "")) + ";";
+        try {
+            Relatorio.geraRelatorioPedDetalhado(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(FRMDocumento.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+    private DefaultTableModel criaTabelaRecebido() {
+        //sempre que usar JTable é necessário ter um DefaulttableModel
+        DefaultTableModel dTable = new DefaultTableModel() {
+            //Define o tipo dos campos (coluna) na mesma ordem que as colunas foram criadas
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            //define se os campos podem ser editados na propria tabela
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        ;
+
+        };
+        //retorna o DefaultTableModel
+    return dTable;
+    }
+
+    private void preencheTabelaRecebido(ArrayList<DocumentoBEAN> dados) {
+        dTable = criaTabelaRecebido();
+        //seta o nome das colunas da tabela
+        dTable.addColumn("Remetente");
+        dTable.addColumn("Assunto");
+        dTable.addColumn("Data/Hora Envio");
+        dTable.addColumn("Data/Hora Recebido");
+        dTable.addColumn("Status");
+        dTable.addColumn("Codigo");
+
+        //pega os dados do ArrayList
+        //cada célula do arrayList vira uma linha(row) na tabela
+        for (DocumentoBEAN dado : dados) {
+            dTable.addRow(new Object[]{dado.getRemetente(), dado.getAssunto(), dado.getDataHora(), dado.getDataRecedido(),
+                dado.getStatus().getNome(), dado.getCodigo()});
+
+        }
+        //set o modelo da tabela
+        tableRecebido.setModel(dTable);
+
+    }
+
+    private DefaultTableModel criaTabelaNotLido() {
+        //sempre que usar JTable é necessário ter um DefaulttableModel
+        DefaultTableModel dTable2 = new DefaultTableModel() {
+            //Define o tipo dos campos (coluna) na mesma ordem que as colunas foram criadas
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            //define se os campos podem ser editados na propria tabela
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        ;
+
+        };
+        //retorna o DefaultTableModel
+    return dTable2;
+    }
+
+    private void preencheTabelaNotLido(ArrayList<DocumentoBEAN> dados) {
+        dTable3 = criaTabelaNotLido();
+        //seta o nome das colunas da tabela
+        dTable3.addColumn("Remetente");
+        dTable3.addColumn("Assunto");
+        dTable3.addColumn("Data/Hora Envio");
+        dTable3.addColumn("Data/Hora Recebimento");
+        dTable3.addColumn("Status");
+        dTable3.addColumn("Codigo");
+
+        //pega os dados do ArrayList
+        //cada célula do arrayList vira uma linha(row) na tabela
+        for (DocumentoBEAN dado : dados) {
+            dTable3.addRow(new Object[]{dado.getRemetente(), dado.getAssunto(), dado.getDataHora(), dado.getDataRecedido(),
+                dado.getStatus().getNome(), dado.getCodigo()});
+        }
+        //set o modelo da tabela
+        tableNovo.setModel(dTable3);
+
+    }
+
+    private DefaultTableModel criaTabelaTodos() {
+        //sempre que usar JTable é necessário ter um DefaulttableModel
+        DefaultTableModel dTable = new DefaultTableModel() {
+            //Define o tipo dos campos (coluna) na mesma ordem que as colunas foram criadas
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            //define se os campos podem ser editados na propria tabela
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        ;
+
+        };
+        //retorna o DefaultTableModel
+    return dTable;
+    }
+
+    private void preencheTabelaTodos(ArrayList<DocumentoBEAN> dados) {
+        dTable4 = criaTabelaNotLido();
+        //seta o nome das colunas da tabela        
+        dTable4.addColumn("Assunto");
+        dTable4.addColumn("Remetente");
+        dTable4.addColumn("Destinatario");
+        dTable4.addColumn("Data/Hora Envio");
+        dTable4.addColumn("Data/Hora Recebimento");
+        dTable4.addColumn("Data/Hora Lido");
+        dTable4.addColumn("Status");
+        dTable4.addColumn("Codigo");
+
+        //pega os dados do ArrayList
+        //cada célula do arrayList vira uma linha(row) na tabela
+        for (DocumentoBEAN dado : dados) {
+            
+                dTable4.addRow(new Object[]{dado.getAssunto(), dado.getRemetente(),
+                    dado.getUsuario().getEnderecoEletronico(), dado.getDataHora(), dado.getDataRecedido(),
+                    dado.getDataLido(), dado.getStatus().getNome(), dado.getCodigo()});
+            
+        }
+        //set o modelo da tabela
+        tableTodos.setModel(dTable4);
+
+    }
+
+    private DefaultTableModel criaTabelaEnviado() {
+        //sempre que usar JTable é necessário ter um DefaulttableModel
+        DefaultTableModel dTable = new DefaultTableModel() {
+            //Define o tipo dos campos (coluna) na mesma ordem que as colunas foram criadas
+            Class[] types = new Class[]{
+                java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+            //define se os campos podem ser editados na propria tabela
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        ;
+
+        };
+        //retorna o DefaultTableModel
+    return dTable;
+    }
+
+    private void preencheTabelaEnviado(ArrayList<DocumentoBEAN> dados) {
+        dTable2 = criaTabelaEnviado();
+        //seta o nome das colunas da tabela
+        dTable2.addColumn("Destinatario");
+        dTable2.addColumn("Assunto");
+        dTable2.addColumn("Data/Hora Envio");
+        dTable2.addColumn("Data/Hora Recebimento");
+        dTable2.addColumn("Data/Hora Lido");
+        dTable2.addColumn("Status");
+        dTable2.addColumn("Codigo");
+
+        //pega os dados do ArrayList
+        //cada célula do arrayList vira uma linha(row) na tabela
+        for (DocumentoBEAN dado : dados) {
+            dTable2.addRow(new Object[]{dado.getUsuario().getEnderecoEletronico(),
+                dado.getAssunto(), dado.getDataHora(), dado.getDataRecedido(), dado.getDataLido(),
+                dado.getStatus().getNome(), dado.getCodigo()});
+        }
+        //set o modelo da tabela
+        tableEnviado.setModel(dTable2);
+
+    }
 
     /**
      * @param args the command line arguments
@@ -707,6 +1140,7 @@ public void setDadosUsuer(int cod, String s, String se) {
     private javax.swing.JButton btnRasc;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu19;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
@@ -727,24 +1161,76 @@ public void setDadosUsuer(int cod, String s, String se) {
     private javax.swing.JMenuItem jMenuItem26;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem54;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable6;
-    private javax.swing.JTable jTable7;
-    private javax.swing.JTable jTable8;
     private javax.swing.JLabel lbFotoUser;
     private javax.swing.JLabel lbHoras;
     private javax.swing.JLabel lbUser;
+    private javax.swing.JTable tableEnviado;
+    private javax.swing.JTable tableNovo;
+    private javax.swing.JTable tableRecebido;
+    private javax.swing.JTable tableTodos;
+    private javax.swing.JTabbedPane tpEnv;
     // End of variables declaration//GEN-END:variables
+
+    private void atualizaTabelaRecebidos() {
+        doc = c.docRecebidos(cod);
+        this.preencheTabelaRecebido(doc);
+    }
+
+    private void atualizaTabelaEnviados() {
+        doc = c.docEnviados(cod);
+        this.preencheTabelaEnviado(doc);
+    }
+
+    private void atualizaTabelaNotLido() {
+        doc = c.docNotLidos(cod);
+        this.preencheTabelaNotLido(doc);
+    }
+
+    private void atualizaTabelaTodos() {
+        doc = c.docTodos(cod);
+        this.preencheTabelaTodos(doc);
+    }
+
+    private void setDataRecebida() {
+        doc = c.docNotLidos(cod);
+        for (DocumentoBEAN d : doc) {
+            System.out.println(d.getDataRecedido());
+            if ((d.getDataRecedido() == null) || d.getDataRecedido().toString().equals("")) {
+                c.setDataRecebido(getDateTime(), d.getCodigo());
+                System.out.println("atualizou");
+            }
+        }
+        this.atualizaTabelaRecebidos();
+        this.atualizaTabelaEnviados();
+        this.atualizaTabelaNotLido();
+        this.atualizaTabelaTodos();
+
+    }
+
+    private void setDataLido(int docCod) {
+        c.setDataLido(getDateTime(), docCod);
+        this.atualizaTabelaRecebidos();
+        this.atualizaTabelaEnviados();
+        this.atualizaTabelaNotLido();
+        this.atualizaTabelaTodos();
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date d = new Date();
+        return dateFormat.format(d);
+    }
 }

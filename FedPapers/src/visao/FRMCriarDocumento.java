@@ -1,16 +1,27 @@
 package visao;
 
+import controle.ControleDocumento;
+import controle.GeraRelatorio;
 import controle.ManipularImagem;
+import controle.Relatorio;
 import controle.UsuarioControl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import modelo.DocumentoBEAN;
 import modelo.UsuarioBEAN;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jdk.nashorn.internal.objects.NativeDate;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -96,17 +107,20 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         btnArquivados = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel81 = new javax.swing.JLabel();
-        tfNome = new javax.swing.JTextField();
+        tfDestinatario = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         btnEnviarFP = new javax.swing.JButton();
         btnEnviarEmail = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        jtfCorpo = new javax.swing.JTextArea();
         jLabel82 = new javax.swing.JLabel();
-        tfNome1 = new javax.swing.JTextField();
+        tfAssunto = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        btnEnviar = new javax.swing.JButton();
+        btnAnexar = new javax.swing.JButton();
+        btnEnvEmail = new javax.swing.JButton();
         lbUser = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
@@ -128,6 +142,9 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
+        jMenu19 = new javax.swing.JMenu();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem54 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -137,8 +154,8 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(20, 105, 20), 2));
 
         btnNovoDocumento.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnNovoDocumento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/add-new-document.png"))); // NOI18N
-        btnNovoDocumento.setText("Novo Documento");
+        btnNovoDocumento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/sent-mail (1).png"))); // NOI18N
+        btnNovoDocumento.setText("Enviar e Salvar");
         btnNovoDocumento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoDocumentoActionPerformed(evt);
@@ -146,7 +163,7 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         });
 
         btnDocumentosEnviados.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDocumentosEnviados.setText("Documentos Enviados");
+        btnDocumentosEnviados.setText("Memorandos Enviados");
         btnDocumentosEnviados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDocumentosEnviadosActionPerformed(evt);
@@ -154,10 +171,20 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         });
 
         btnDocimentosRecebidos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDocimentosRecebidos.setText("Documentos Recebidos");
+        btnDocimentosRecebidos.setText("Memorandos Recebidos");
+        btnDocimentosRecebidos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDocimentosRecebidosActionPerformed(evt);
+            }
+        });
 
         btnRascunhos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnRascunhos.setText("Rascunhos");
+        btnRascunhos.setText("Novos Memorandos");
+        btnRascunhos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRascunhosActionPerformed(evt);
+            }
+        });
 
         lbFotoUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/INTERFACE GRAFICA/user (2).png"))); // NOI18N
 
@@ -168,10 +195,20 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         lbHoras.setText(".");
 
         btnTodosDocumentos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnTodosDocumentos.setText("Todos os Documentos");
+        btnTodosDocumentos.setText("Todos os Memorandos");
+        btnTodosDocumentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTodosDocumentosActionPerformed(evt);
+            }
+        });
 
         btnArquivados.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnArquivados.setText("Arquivados");
+        btnArquivados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArquivadosActionPerformed(evt);
+            }
+        });
 
         jLabel81.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel81.setText("Destinatário(s)  :");
@@ -212,10 +249,9 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setText("FrameWork editor de textos, configurado com os padros estipulados pelos desenvolvedores \nOpção 2: manipulação do jTextArea. ");
-        jScrollPane1.setViewportView(jTextArea1);
+        jtfCorpo.setColumns(20);
+        jtfCorpo.setRows(5);
+        jScrollPane1.setViewportView(jtfCorpo);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -239,8 +275,8 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(117, 117, 117)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(283, 283, 283)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEnviarEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -250,10 +286,57 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel1.setText("Status do Documento aqui...");
-
         jLabel82.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel82.setText("Assunto :");
+
+        tfAssunto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfAssuntoActionPerformed(evt);
+            }
+        });
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        btnEnviar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnEnviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visaoDaniel/icons/sent-mail (1).png"))); // NOI18N
+        btnEnviar.setText("Enviar e Salvar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
+
+        btnAnexar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnAnexar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/INTERFACE GRAFICA/icons8-Anexo-48.png"))); // NOI18N
+        btnAnexar.setText("Anexar");
+
+        btnEnvEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnEnvEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/mail-sent (1).png"))); // NOI18N
+        btnEnvEmail.setText("Enviar via Email");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEnvEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(110, 110, 110)
+                .addComponent(btnAnexar, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAnexar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEnvEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -265,15 +348,15 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
                     .addComponent(jLabel81)
                     .addComponent(jLabel82))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 665, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfNome1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
-                .addComponent(jLabel1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfDestinatario, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
+                    .addComponent(tfAssunto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(51, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -281,17 +364,17 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfDestinatario, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel81))
                 .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel82)
-                    .addComponent(tfNome1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                    .addComponent(tfAssunto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 466, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         lbUser.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
@@ -398,7 +481,7 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu1.setText("Documentos");
+        jMenu1.setText("Memorandos");
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ADD, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/add-new-document.png"))); // NOI18N
@@ -413,6 +496,11 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.SHIFT_MASK));
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/sent-mail.png"))); // NOI18N
         jMenuItem4.setText("Enviados");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.SHIFT_MASK));
@@ -434,16 +522,31 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         jMenu1.add(jMenuItem6);
 
         jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, java.awt.event.InputEvent.SHIFT_MASK));
-        jMenuItem7.setText("Rascunhos");
+        jMenuItem7.setText("Novos");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem7);
 
         jMenuItem19.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.SHIFT_MASK));
         jMenuItem19.setText("Arquivados");
+        jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem19ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem19);
 
         jMenuItem20.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, java.awt.event.InputEvent.SHIFT_MASK));
         jMenuItem20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/magnifier.png"))); // NOI18N
         jMenuItem20.setText("Localizar");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem20ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem20);
 
         jMenuBar1.add(jMenu1);
@@ -501,6 +604,26 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu19.setText("Relatórios");
+
+        jMenuItem12.setText("Gerar Relatório Contatos");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem12);
+
+        jMenuItem54.setText("Gerar Relatório Memorandos");
+        jMenuItem54.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem54ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem54);
+
+        jMenuBar1.add(jMenu19);
+
         jMenu4.setText("Ajuda");
         jMenuBar1.add(jMenu4);
 
@@ -521,11 +644,41 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNovoDocumentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoDocumentoActionPerformed
-        // TODO add your handling code here:
+       ControleDocumento cd = new ControleDocumento();
+
+        UsuarioControl cu = new UsuarioControl();
+        boolean aux = this.verificaCampos();
+        if (aux == true) {
+            DocumentoBEAN doc = this.pegaDados();
+            int c = cd.cadastrarDoc(doc);
+            UsuarioBEAN d = cu.verificaUser(tfDestinatario.getText() + "");
+            if (d == null) {
+                JOptionPane.showMessageDialog(null, "Usuario não existente!!");
+            } else {
+                cd.enviar(c, d.getCod());
+
+                JOptionPane.showMessageDialog(null, "Documento enviado com sucesso!!");
+                try {
+                    String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario "
+                            + "from documento join destinatariointerno join usuario "
+                            + " where docCodigo = dei_docCodigo and dei_usuCodigo = "
+                            + "usuCodigo and doc_usuCodigo =" + cod + " and docCodigo =" + c + ";";
+                    
+                    Relatorio.geraRelatorioPedDetalhado(sql);
+                } catch (Exception ex) {
+                    Logger.getLogger(FRMCriarDocumento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Prencha todos os campos!!");
+        }
     }//GEN-LAST:event_btnNovoDocumentoActionPerformed
 
     private void btnDocumentosEnviadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocumentosEnviadosActionPerformed
-        // TODO add your handling code here:
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,0);
+        this.setVisible(false);
     }//GEN-LAST:event_btnDocumentosEnviadosActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -533,11 +686,17 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        // TODO add your handling code here:
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,1);
+        this.setVisible(false);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // TODO add your handling code here:
+       FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
+        this.setVisible(false);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void btnEnviarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarEmailActionPerformed
@@ -617,6 +776,113 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
         c.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem17ActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        ControleDocumento cd = new ControleDocumento();
+
+        UsuarioControl cu = new UsuarioControl();
+        boolean aux = this.verificaCampos();
+        if (aux == true) {
+            DocumentoBEAN doc = this.pegaDados();
+            int c = cd.cadastrarDoc(doc);
+            UsuarioBEAN d = cu.verificaUser(tfDestinatario.getText() + "");
+            if (d == null) {
+                JOptionPane.showMessageDialog(null, "Usuario não existente!!");
+            } else {
+                cd.enviar(c, d.getCod());
+
+                JOptionPane.showMessageDialog(null, "Documento enviado com sucesso!!");
+                try {
+                    String sql = "select docCodigo,docData,docAssunto,docRemetente,docCorpoTexto, usuEnderecoEletronico as Destinatario "
+                            + "from documento join destinatariointerno join usuario "
+                            + " where docCodigo = dei_docCodigo and dei_usuCodigo = "
+                            + "usuCodigo and doc_usuCodigo =" + cod + " and docCodigo =" + c + ";";
+                    
+                    Relatorio.geraRelatorioPedDetalhado(sql);
+                } catch (Exception ex) {
+                    Logger.getLogger(FRMCriarDocumento.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Prencha todos os campos!!");
+        }
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,3);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,0);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
+      FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuItem19ActionPerformed
+
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
+
+    private void btnDocimentosRecebidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDocimentosRecebidosActionPerformed
+       FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,1);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnDocimentosRecebidosActionPerformed
+
+    private void btnTodosDocumentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTodosDocumentosActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnTodosDocumentosActionPerformed
+
+    private void btnRascunhosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRascunhosActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,3);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnRascunhosActionPerformed
+
+    private void btnArquivadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArquivadosActionPerformed
+        FRMDocumento d = new FRMDocumento();
+        d.setVisible(true);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnArquivadosActionPerformed
+
+    private void tfAssuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAssuntoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfAssuntoActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
+
+    private void jMenuItem54ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem54ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Usuario");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem54ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -717,9 +983,12 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnexar;
     private javax.swing.JButton btnArquivados;
     private javax.swing.JButton btnDocimentosRecebidos;
     private javax.swing.JButton btnDocumentosEnviados;
+    private javax.swing.JButton btnEnvEmail;
+    private javax.swing.JButton btnEnviar;
     private javax.swing.JButton btnEnviarEmail;
     private javax.swing.JButton btnEnviarFP;
     private javax.swing.JButton btnImprimir;
@@ -727,11 +996,11 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     private javax.swing.JButton btnRascunhos;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnTodosDocumentos;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel81;
     private javax.swing.JLabel jLabel82;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu19;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
@@ -739,6 +1008,7 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
@@ -748,6 +1018,7 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem54;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -755,14 +1026,43 @@ public class FRMCriarDocumento extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jtfCorpo;
     private javax.swing.JLabel lbFotoUser;
     private javax.swing.JLabel lbHoras;
     private javax.swing.JLabel lbUser;
-    private javax.swing.JTextField tfNome;
-    private javax.swing.JTextField tfNome1;
+    private javax.swing.JTextField tfAssunto;
+    private javax.swing.JTextField tfDestinatario;
     // End of variables declaration//GEN-END:variables
+
+    public DocumentoBEAN pegaDados() {
+        DocumentoBEAN doc = new DocumentoBEAN();
+        doc.setAssunto(tfAssunto.getText());
+        ArrayList<UsuarioBEAN> dados = new ArrayList<UsuarioBEAN>();
+        UsuarioControl uc = new UsuarioControl();
+        dados = uc.localizar(cod);
+        doc.setRemetente(dados.get(0).getEnderecoEletronico());
+        doc.setCorpoTexto(jtfCorpo.getText());
+        doc.setDataHora(this.getDateTime());
+        doc.setCodigo(cod);
+        return doc;
+
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date d = new Date();
+        return dateFormat.format(d);
+    }
+
+    public Boolean verificaCampos() {
+        boolean aux = true;
+        if (tfAssunto.getText().toString().equals("") || tfDestinatario.getText().toString().equals("") || jtfCorpo.getText().toString().equals("")) {
+            aux = false;
+        }
+        return aux;
+    }
 }

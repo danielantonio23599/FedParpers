@@ -29,7 +29,7 @@ public class LoginControl {
     public String[] logar(String nome, LoginBEAN login) {
         String aux[] = new String[2];
         int l[] = ld.logar(nome, login);
-        if ((l[0] == 1) && (l[1] >0)) {
+        if ((l[0] == 1) && (l[1] > 0)) {
             aux[0] = "Seja Bem Vindo";
             aux[1] = l[1] + "";
             return aux;

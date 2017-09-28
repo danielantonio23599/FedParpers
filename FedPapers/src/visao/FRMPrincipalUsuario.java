@@ -1,5 +1,6 @@
 package visao;
 
+import controle.GeraRelatorio;
 import controle.ManipularImagem;
 import controle.UsuarioControl;
 import java.awt.event.ActionEvent;
@@ -115,6 +116,9 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         jMenuItem15 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenuItem17 = new javax.swing.JMenuItem();
+        jMenu19 = new javax.swing.JMenu();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem54 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -124,7 +128,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BARRA DE TAREFAS/add-new-document.png"))); // NOI18N
-        jButton1.setText("Novo Documento");
+        jButton1.setText("Novo Memorando");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -132,7 +136,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         });
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton2.setText("Documentos Enviados");
+        jButton2.setText("Memorandos Enviados");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -140,7 +144,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         });
 
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton3.setText("Documentos Recebidos");
+        jButton3.setText("Memorandos Recebidos");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -148,7 +152,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         });
 
         jButton4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton4.setText("Rascunhos");
+        jButton4.setText("Novos Memorandos");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -166,7 +170,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         lbHoras.setForeground(new java.awt.Color(0, 153, 0));
 
         jButton5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton5.setText("Todos os Documentos");
+        jButton5.setText("Todos os Memorandos");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -280,9 +284,9 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu1.setText("Documentos");
+        jMenu1.setText("Memorandos");
 
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/visao/ICONES-FEDPAPERS/BOTÕES/add-new-document.png"))); // NOI18N
         jMenuItem3.setText("Criar Novo");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -321,7 +325,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         jMenu1.add(jMenuItem6);
 
         jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem7.setText("Rascunhos");
+        jMenuItem7.setText("Novos");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
@@ -403,6 +407,26 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu19.setText("Relatórios");
+
+        jMenuItem11.setText("Gerar Relatório Contatos");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem11);
+
+        jMenuItem54.setText("Gerar Relatório Memorandos");
+        jMenuItem54.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem54ActionPerformed(evt);
+            }
+        });
+        jMenu19.add(jMenuItem54);
+
+        jMenuBar1.add(jMenu19);
+
         jMenu4.setText("Ajuda");
         jMenuBar1.add(jMenu4);
 
@@ -425,26 +449,26 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,1);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        FRMDocumento d = new FRMDocumento();
+        FRMCriarDocumento d = new FRMCriarDocumento();
         d.setVisible(true);
         d.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        FRMDocumento d = new FRMDocumento();
+        FRMCriarDocumento d = new FRMCriarDocumento();
         d.setVisible(true);
         d.setDadosUsuer(cod, tipoUser, senha);
         this.setVisible(false);
@@ -453,7 +477,9 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        
+        d.setDadosUsuer(cod, tipoUser, senha,0);
+        
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -473,28 +499,28 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,0);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,3);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem19ActionPerformed
 
     private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
@@ -536,28 +562,28 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,1);
         this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,3);
         this.setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         FRMDocumento d = new FRMDocumento();
         d.setVisible(true);
-        d.setDadosUsuer(cod, tipoUser, senha);
+        d.setDadosUsuer(cod, tipoUser, senha,2);
         this.setVisible(false);
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -567,6 +593,22 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
         p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Contato");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem54ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem54ActionPerformed
+        try {
+            //chama o método para dar início a geração do relatório passando o código do cliente como parâmetro
+            GeraRelatorio.geraRelatorio(cod,"Usuario");
+        } catch (Exception x) {
+        }
+    }//GEN-LAST:event_jMenuItem54ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -620,12 +662,14 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu19;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
@@ -635,6 +679,7 @@ public class FRMPrincipalUsuario extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem54;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;

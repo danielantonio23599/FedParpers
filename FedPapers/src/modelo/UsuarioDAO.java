@@ -26,7 +26,7 @@ public class UsuarioDAO {
     }
 
     public void adicionar(UsuarioBEAN u) {
-        String sql = "insert into usuario(usoNome,usuSobrenome,usuSiape,"
+        String sql = "insert into usuario(usuNome,usuSobrenome,usuSiape,"
                 + "usuCPF,usuRG,usuDataNascimento,usuEmail,usuEnderecoEletronico,"
                 + "usuTelefoneCelular,usuTelefoneFixo,usu_tipCodigo,usu_carCodigo,"
                 + "usu_setCodigo,usu_logCodigo,usu_areCodigo)"
@@ -62,7 +62,7 @@ public class UsuarioDAO {
         int ss;
         int tt;
         ArrayList<UsuarioBEAN> uAL = new ArrayList<UsuarioBEAN>();
-        String sql = "select usuCodigo,usoNome,usuSobrenome,usuSiape,usuCPF,usuRG,usuDataNascimento,usuEmail,"
+        String sql = "select usuCodigo,usuNome,usuSobrenome,usuSiape,usuCPF,usuRG,usuDataNascimento,usuEmail,"
                 + "usuEnderecoEletronico,usuTelefoneCelular,"
                 + "usuTelefoneFixo,usu_tipCodigo,usu_carCodigo,usu_setCodigo, usu_logCodigo,usu_areCodigo from usuario;";
 
@@ -134,7 +134,7 @@ public class UsuarioDAO {
         int ss;
         int tt;
         ArrayList<UsuarioBEAN> uAL = new ArrayList<UsuarioBEAN>();
-        String sql = "select usuCodigo,usoNome,usuSobrenome,usuSiape,usuCPF,usuRG,"
+        String sql = "select usuCodigo,usuNome,usuSobrenome,usuSiape,usuCPF,usuRG,"
                 + "usuDataNascimento,usuEmail,usuEnderecoEletronico,usuTelefoneCelular,"
                 + "usuTelefoneFixo,usu_tipCodigo,usu_carCodigo,usu_setCodigo,usu_logCodigo,"
                 + "usu_areCodigo,usuFoto from usuario where usuCodigo = ?;";
@@ -162,6 +162,7 @@ public class UsuarioDAO {
                 int login = rs.getInt(15);
                 aa = rs.getInt(16);
                 u.setFoto(rs.getBytes(17));
+                System.out.println(u.getFoto());
                 //pega o cargo
                 CargoDAO j = new CargoDAO();
                 ArrayList<CargoBEAN> cc = j.localizar(c);
@@ -205,7 +206,7 @@ public class UsuarioDAO {
     }
 
     public void editarUser(UsuarioBEAN u) {
-        String sql = "update usuario  set usoNome = '" + u.getNome() + "' ,usuSobrenome = '" + u.getSobreNome() + "',"
+        String sql = "update usuario  set usuNome = '" + u.getNome() + "' ,usuSobrenome = '" + u.getSobreNome() + "',"
                 + " usuSiape = " + u.getSiape() + " ,usuCPF = '" + u.getCPF() + "', usuRG = '" + u.getRG() + "', "
                 + "usuDataNascimento = '" + u.getData() + "',usuEmail = '" + u.getEmail() + "' ,usuEnderecoEletronico = "
                 + "'" + u.getEnderecoEletronico() + "',usuTelefoneCelular = '" + u.getCelular() + "',"
@@ -231,7 +232,7 @@ public class UsuarioDAO {
     }
 
     public void editarUserA(UsuarioBEAN u) {
-        String sql = "update usuario  set usoNome = '" + u.getNome() + "' ,usuSobrenome = '" + u.getSobreNome() + "',"
+        String sql = "update usuario  set usuNome = '" + u.getNome() + "' ,usuSobrenome = '" + u.getSobreNome() + "',"
                 + " usuSiape = " + u.getSiape() + " ,usuCPF = '" + u.getCPF() + "', usuRG = '" + u.getRG() + "', "
                 + "usuDataNascimento = '" + u.getData() + "',usuEmail = '" + u.getEmail() + "' ,usuEnderecoEletronico = "
                 + "'" + u.getEnderecoEletronico() + "',usuTelefoneCelular = '" + u.getCelular() + "',"
@@ -240,7 +241,7 @@ public class UsuarioDAO {
 
         try {
             stmt = connection.prepareStatement(sql);
-            
+
             stmt.setInt(1, u.getCargo().getCod());
             stmt.setInt(2, u.getSetor().getCod());
             stmt.setInt(3, u.getArea().getCod());
@@ -321,11 +322,58 @@ public class UsuarioDAO {
         try {
             stmt = connection.prepareStatement(sql);
             stmt.setBytes(1, u.getFoto());
+
+            System.out.println(u.getFoto());
             stmt.setInt(2, u.getCod());
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public UsuarioBEAN verificaUser(String E) {
+        UsuarioBEAN u = new UsuarioBEAN();
+        u.setCod(0);
+        String sql = "select usuFoto,usuCodigo from usuario where usuEnderecoEletronico ='" + E + "'";
+        try {
+            stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                u.setFoto(rs.getBytes(1));
+                u.setCod(rs.getInt(2));
+            }
+            stmt.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (u.getCod() != 0) {
+            return u;
+        } else {
+            return null;
+        }
+    }
+
+    public UsuarioBEAN verificaUpdate(ArrayList<ContatoBEAN> aux) {
+        UsuarioBEAN u = new UsuarioBEAN();
+        String sql = "select count(usuCodigo) from usuario where usuEnderecoEletronico = '" + aux.get(0).getEndEletronico() + "' and usuFoto != ?;";
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setBytes(1, aux.get(0).getFoto());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                u.setFoto(rs.getBytes(1));
+            }
+            stmt.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!u.getFoto().equals("")) {
+            return u;
+        } else {
+            return null;
         }
     }
 }

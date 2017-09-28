@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Usuario" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad502d2a-f01e-4f1a-8baf-94183882c4e8">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="memorando"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="memorando" uuid="224a186b-f95c-4349-8066-9a5fcd592841">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="479"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="521"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="memorando"/>
+		<parameter name="usuCodigo" class="java.lang.Integer"/>
+		<queryString language="SQL">
+			<![CDATA[select docData,docAssunto,docRemetente,Destinatario from documento join destinatariointerno join (select usuCodigo as desCodigo, usuEnderecoEletronico as Destinatario from usuario  ) as dest  join usuario   where doc_usuCodigo = usuCodigo  and desCodigo = dei_usuCodigo and 
+                 dei_docCodigo = docCodigo and( usuCodigo =$P{usuCodigo}  or desCodigo=$P{usuCodigo} )]]>
+		</queryString>
+		<field name="docData" class="java.lang.String"/>
+		<field name="docAssunto" class="java.lang.String"/>
+		<field name="docRemetente" class="java.lang.String"/>
+		<field name="Destinatario" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="usuCodigo" class="java.lang.Integer"/>
+	<parameter name="imgURL" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select usuNome from usuario where usuCodigo =$P{usuCodigo} ]]>
+	</queryString>
+	<field name="usuNome" class="java.lang.String"/>
+	<title>
+		<band height="91" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="90" width="556" height="1" uuid="c6c1dc49-2253-4b66-911c-a30973e77e3f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="157" y="10" width="243" height="25" uuid="507605ea-728c-40f9-9ce5-afb2aa6d6e43">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório de Memorandos ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="40" width="40" height="20" uuid="c2a6bec2-db5a-4ab9-af30-b9dfa347be99"/>
+				<text><![CDATA[Usuário: ]]></text>
+			</staticText>
+			<image>
+				<reportElement key="imgURL" x="0" y="10" width="130" height="60" uuid="9836006f-ebc8-484c-9e4b-e5ea583873cf"/>
+				<imageExpression><![CDATA[$P{imgURL}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="230" y="40" width="100" height="17" uuid="5975ba69-453d-4532-8b1d-82e39c4311b5"/>
+				<textFieldExpression><![CDATA[$F{usuNome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="321" splitType="Stretch">
+			<componentElement>
+				<reportElement x="20" y="50" width="480" height="200" uuid="22fe37b5-04e0-4bea-ba1b-a7b157f0cf37">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="memorando" uuid="cecfb954-9d0b-47ad-8eee-8b9f92de8f88">
+						<datasetParameter name="usuCodigo">
+							<datasetParameterExpression><![CDATA[$P{usuCodigo}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="120" uuid="b3a35602-3eee-4599-953e-bc4a898f3ab3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" uuid="a519155c-195a-499f-a327-7ce0d67b1469"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Data]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="30" uuid="49235643-bf07-43b7-acd9-b454af91e3bb"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{docData}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="120" uuid="e7533b6e-4240-4198-b5cb-0d899d9b3142">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" uuid="33a889dc-67cb-4b97-9ada-641bb84a985a"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Assunto]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="30" uuid="12f452d7-ecdf-4b77-b0ac-dbecec926054"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{docAssunto}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="120" uuid="0dce2555-ef8a-4a2b-876d-e00aee7d143a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" uuid="ade90fc3-c95e-4c4e-87ed-68cdcb602e99"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Remetente]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="30" uuid="a09fc763-8634-44da-8156-646537b69730"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{docRemetente}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="120" uuid="0d0e9ee2-d63d-466e-bed3-7c83c7fd8b2c">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" uuid="2f79159b-359f-48b2-96bf-e869c134fb88"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[Destinatário]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="30" uuid="6b31d8ff-8839-4115-a88f-e180debe5bd0"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Destinatario}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</columnHeader>
+	<lastPageFooter>
+		<band height="177">
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="147" width="556" height="30" backcolor="#E6E8E9" uuid="989941cb-7537-4368-9660-1c31538ac5a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIOS MEMORANDOS]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

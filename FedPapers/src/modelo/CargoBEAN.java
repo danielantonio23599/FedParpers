@@ -10,6 +10,7 @@ package modelo;
  * @author Daniel
  */
 public class CargoBEAN {
+
     private int cod;
     private String nome;
     private String descricao;
@@ -37,5 +38,5 @@ public class CargoBEAN {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
+
 }

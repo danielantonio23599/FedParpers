@@ -10,6 +10,7 @@ package modelo;
  * @author Daniel
  */
 public class LoginBEAN {
+
     private int cod;
     private String login;
     private String senha;
@@ -37,5 +38,5 @@ public class LoginBEAN {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
+
 }

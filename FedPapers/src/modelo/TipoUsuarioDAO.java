@@ -61,6 +61,7 @@ public class TipoUsuarioDAO {
         }
         return c;
     }
+
     public TipoUsuarioBEAN tipo(int c) {
         TipoUsuarioBEAN car = new TipoUsuarioBEAN();
         String sql = "select tipCodigo,tipNome from usuario join tipo_usuario where tipCodigo = ?";

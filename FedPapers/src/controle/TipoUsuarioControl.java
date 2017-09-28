@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package controle;
+
 import java.util.ArrayList;
 import modelo.TipoUsuarioBEAN;
 import modelo.TipoUsuarioDAO;
@@ -13,7 +14,9 @@ import modelo.TipoUsuarioDAO;
  * @author Daniel
  */
 public class TipoUsuarioControl {
-private TipoUsuarioDAO t =new TipoUsuarioDAO();
+
+    private TipoUsuarioDAO t = new TipoUsuarioDAO();
+
     public TipoUsuarioBEAN pegaCodigo(String tipoUser) {
         TipoUsuarioBEAN tipo = t.pegaCodigo(tipoUser);
         return tipo;
@@ -24,6 +27,4 @@ private TipoUsuarioDAO t =new TipoUsuarioDAO();
         return tipo;
     }
 
-    
-    
 }

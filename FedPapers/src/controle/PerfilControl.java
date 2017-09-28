@@ -13,8 +13,10 @@ import modelo.UsuarioDAO;
  * @author Daniel
  */
 public class PerfilControl {
-        private UsuarioDAO ud = new UsuarioDAO();
-     public String editarUser(UsuarioBEAN u) {
+
+    private UsuarioDAO ud = new UsuarioDAO();
+
+    public String editarUser(UsuarioBEAN u) {
         boolean auz = this.verificaIgualEdit(u);
         if (auz != false) {
             ud.editarUserA(u);
@@ -25,12 +27,12 @@ public class PerfilControl {
     }
 
     private boolean verificaIgualEdit(UsuarioBEAN u) {
-       boolean aux = ud.verificaEmail(u);
-       if(aux == true){
-       return true;
-       }else{
-       return false;
-       }
+        boolean aux = ud.verificaEmail(u);
+        if (aux == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

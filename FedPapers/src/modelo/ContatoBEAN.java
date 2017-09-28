@@ -10,11 +10,39 @@ package modelo;
  * @author Mateu
  */
 public class ContatoBEAN {
-   private UsuarioBEAN usuario;
-   private int codigo;
-   private String tipoUser;
-   private String endEletronico;
-   private String Nome;
+
+    private UsuarioBEAN usuario;
+    private int codigo;
+    private String tipoUser;
+    private String endEletronico;
+    private String email;
+    private String celular;
+    private byte[] foto;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+    private String Nome;
 
     public String getTipoUser() {
         return tipoUser;
@@ -23,8 +51,6 @@ public class ContatoBEAN {
     public void setTipoUser(String tipoUser) {
         this.tipoUser = tipoUser;
     }
-
-    
 
     public String getEndEletronico() {
         return endEletronico;
@@ -58,9 +84,4 @@ public class ContatoBEAN {
         this.usuario = usuario;
     }
 
-   
-
-   
-    
-   
 }

@@ -77,9 +77,11 @@ public class FRMUsuario extends javax.swing.JFrame {
         this.pegaTipoU = pegaTipoU;
         this.preencheCombo();
         dados = uc.listarALL();
-        this.preencheTabela(dados);
-     this.HORAS();
-       Timer time = new Timer(1000, ativar);
+        if (dados.size() > 0) {
+            this.preencheTabela(dados);
+        }
+        this.HORAS();
+        Timer time = new Timer(1000, ativar);
         time.start();
     }
 
@@ -105,7 +107,6 @@ public class FRMUsuario extends javax.swing.JFrame {
     int hh, mm, ss, dd; //*
     Calendar hora; //*Hora
     DecimalFormat formato;
-
 
     private void preencheCombo() {
         for (AreaBEAN ar : pegaArea) {
@@ -1193,7 +1194,9 @@ public class FRMUsuario extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, m);
                     }
                 }
-            }else{JOptionPane.showMessageDialog(null, "Preencha os campos de login!");}
+            } else {
+                JOptionPane.showMessageDialog(null, "Preencha os campos de login!");
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
 
@@ -1201,32 +1204,32 @@ public class FRMUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAdicionarjButton6ActionPerformed
 
     private void btnEditarjButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarjButton7ActionPerformed
-       if(lbCodigo.getText().equals("")){
-           JOptionPane.showMessageDialog(null, "localize o usuario para editar");
-       }else{
-        boolean aux = this.verificaCampos();
-        if (aux == true) {
-            UsuarioBEAN u = this.pegaCampos();
-            if (u == null) {
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
-            } else {
-                int opc = JOptionPane.showConfirmDialog(null, "Deseja editar o Usuario " + tfNome.getText());
-                if (opc == 0) {
-                    String m = uc.editarUser(u);
-                    dados = uc.listarALL();
-                    this.preencheTabela(dados);
-                    JOptionPane.showMessageDialog(null, m);
-                    if (m.equals("Edição feita com sucesso!")) {
-                        this.limparCampos();
-                    }
-                } else {
-
-                }
-            }
+        if (lbCodigo.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "localize o usuario para editar");
         } else {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
+            boolean aux = this.verificaCampos();
+            if (aux == true) {
+                UsuarioBEAN u = this.pegaCampos();
+                if (u == null) {
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
+                } else {
+                    int opc = JOptionPane.showConfirmDialog(null, "Deseja editar o Usuario " + tfNome.getText());
+                    if (opc == 0) {
+                        String m = uc.editarUser(u);
+                        dados = uc.listarALL();
+                        this.preencheTabela(dados);
+                        JOptionPane.showMessageDialog(null, m);
+                        if (m.equals("Edição feita com sucesso!")) {
+                            this.limparCampos();
+                        }
+                    } else {
+
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
+            }
         }
-       }
     }//GEN-LAST:event_btnEditarjButton7ActionPerformed
 
     private void btnExcluirjButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirjButton8ActionPerformed
@@ -1526,7 +1529,7 @@ public class FRMUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
-        FRMPerfil p = new FRMPerfil();        
+        FRMPerfil p = new FRMPerfil();
         p.setDadosUsuer(cod, tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
@@ -1534,7 +1537,7 @@ public class FRMUsuario extends javax.swing.JFrame {
 
     private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
         FRMPrincipalUsuario p = new FRMPrincipalUsuario();
-        p.setDadosUsuer(cod +"", tipoUser, senha);
+        p.setDadosUsuer(cod + "", tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem18ActionPerformed
@@ -1554,7 +1557,7 @@ public class FRMUsuario extends javax.swing.JFrame {
 
     private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
         FRMPrincipalAdministrador p = new FRMPrincipalAdministrador();
-        p.setDadosUsuer(cod+"", tipoUser, senha);
+        p.setDadosUsuer(cod + "", tipoUser, senha);
         p.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem22ActionPerformed

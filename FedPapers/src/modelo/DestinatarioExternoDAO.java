@@ -9,6 +9,6 @@ package modelo;
  *
  * @author Daniel
  */
-public class DestinatarioInternoDAO {
-    
+public class DestinatarioExternoDAO {
+
 }

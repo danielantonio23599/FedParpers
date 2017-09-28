@@ -10,6 +10,7 @@ package modelo;
  * @author Daniel
  */
 public class UsuarioBEAN {
+
     private int cod;
     private String nome;
     private String sobreNome;
@@ -22,7 +23,6 @@ public class UsuarioBEAN {
     private String enderecoEletronico;
     private int siape;
     private byte[] foto;
-    private byte[] assinatura;
     private LoginBEAN login;
     private AreaBEAN area;
     private CargoBEAN cargo;
@@ -36,7 +36,6 @@ public class UsuarioBEAN {
     public void setArea(AreaBEAN area) {
         this.area = area;
     }
-    
 
     public LoginBEAN getLogin() {
         return login;
@@ -166,12 +165,4 @@ public class UsuarioBEAN {
         this.foto = foto;
     }
 
-    public byte[] getAssinatura() {
-        return assinatura;
-    }
-
-    public void setAssinatura(byte[] assinatura) {
-        this.assinatura = assinatura;
-    }
-    
 }
